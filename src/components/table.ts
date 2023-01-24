@@ -94,3 +94,5 @@ class Table<Type extends RowData> {
     );
   };
 }
+
+export default Table;
