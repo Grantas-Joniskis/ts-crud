@@ -5,7 +5,6 @@ type RowData = {
   [key: string]: string,
 };
 
-
 export type TableProps<Type> = {
   title: string,
   columns: Type,
