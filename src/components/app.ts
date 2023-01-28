@@ -8,17 +8,17 @@ import CarJoined from '../types/car-joined';
 import SelectField from './select-field';
 
 class App {
-  private htmlElement: HTMLElement;
-
   private carsCollection: CarsCollection;
 
   private selectedBrandId: null | string;
 
-  private carTable: Table<StringifyObjectProps<CarJoined>>;
-
   private brandSelect: SelectField;
 
-  constructor(selector: string) {
+  private carTable: Table<StringifyObjectProps<CarJoined>>;
+
+  private htmlElement: HTMLElement;
+
+  public constructor(selector: string) {
     const foundElement = document.querySelector<HTMLElement>(selector);
     if (foundElement === null) throw new Error(`Nerastas elementas su selektoriumi '${selector}'`);
 
@@ -33,6 +33,7 @@ class App {
         year: 'Metai',
       },
       rowsData: this.carsCollection.all.map(stringifyProps),
+      onDelete: this.handleCarDelete,
     });
     this.brandSelect = new SelectField({
       labelText: 'Markė',
@@ -48,6 +49,12 @@ class App {
 
   private handleBrandChange = (brandId: string): void => {
     this.selectedBrandId = brandId;
+
+    this.update();
+  };
+
+  private handleCarDelete = (carId: string): void => {
+    this.carsCollection.deleteCarById(carId);
 
     this.update();
   };
@@ -71,22 +78,13 @@ class App {
     }
   };
 
-  initialize = (): void => {
-    const carTable = new Table({
-      title: 'Visi automobiliai',
-      columns: {
-        id: 'Id',
-        brand: 'Markė',
-        model: 'Modelis',
-        price: 'Kaina',
-        year: 'Metai',
-      },
-      rowsData: this.carsCollection.all.map(stringifyProps),
-    });
-
+  public initialize = (): void => {
     const container = document.createElement('div');
-    container.className = 'container my-5';
-    container.appendChild(carTable.htmlElement);
+    container.className = 'container my-4 d-flex  flex-column gap-3';
+    container.append(
+      this.brandSelect.htmlElement,
+      this.carTable.htmlElement,
+    );
 
     this.htmlElement.append(container);
   };
