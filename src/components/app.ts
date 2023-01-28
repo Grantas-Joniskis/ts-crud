@@ -1,20 +1,27 @@
-import Table from "./table";
-import cars from "../data/cars";
-import brands from "../data/brands";
-import models from "../data/models";
+import Table from './table';
+import cars from '../data/cars';
+import brands from '../data/brands';
+import models from '../data/models';
 import CarsCollection from '../helpers/cars-collection';
-import stringifyProps from "../helpers/stringify-object";
+import stringifyProps from '../helpers/stringify-object';
+import SelectField from './select-field';
 
 class App {
   private htmlElement: HTMLElement;
 
   private carsCollection: CarsCollection;
 
+  private selectedBrandId: null | string;
+
+  private brandSelect: SelectField;
+
   constructor(selector: string) {
     const foundElement = document.querySelector<HTMLElement>(selector);
     this.carsCollection = new CarsCollection({ cars, brands, models });
 
     if (foundElement === null) throw new Error(`Nerastas elementas su selektoriumi '${selector}'`);
+
+    this.selectedBrandId = null;
 
     this.htmlElement = foundElement;
   }
@@ -30,7 +37,7 @@ class App {
         year: 'Metai',
       },
       rowsData: this.carsCollection.all.map(stringifyProps),
-    });;
+    });
 
     const container = document.createElement('div');
     container.className = 'container my-5';
