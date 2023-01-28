@@ -4,13 +4,15 @@ type OptionType = {
 };
 
 export type SelectFieldProps = {
+  name?: string,
   labelText: string,
-  onChange: (newValue: string) => void,
+  onChange?: (newValue: string) => void,
   options: OptionType[],
+  value?: string,
 };
 
 class SelectField {
-  private static uniqId = 0;
+  private static instanceCounter = 0;
 
   private props: SelectFieldProps;
 
@@ -23,7 +25,7 @@ class SelectField {
   constructor(props: SelectFieldProps) {
     this.props = props;
 
-    SelectField.uniqId += 1;
+    SelectField.instanceCounter += 1;
     this.htmlElement = document.createElement('div');
     this.htmlSelectElement = document.createElement('select');
     this.htmlLabelElement = document.createElement('label');
@@ -33,7 +35,7 @@ class SelectField {
   }
 
   private initialize = (): void => {
-    const elementId = `select-${SelectField.uniqId}`;
+    const elementId = `select-${SelectField.instanceCounter}`;
 
     this.htmlLabelElement.setAttribute('for', elementId);
 
@@ -48,20 +50,27 @@ class SelectField {
   };
 
   private renderView = (): void => {
-    const { labelText, onChange } = this.props;
+    const { labelText, onChange, name } = this.props;
 
     this.htmlLabelElement.innerHTML = labelText;
-    this.htmlSelectElement.addEventListener('change', () => onChange(this.htmlSelectElement.value));
-    this.renderSelectOptions();
+
+    if (onChange) {
+      this.htmlSelectElement.addEventListener('change', () => onChange(this.htmlSelectElement.value));
+    }
+    if (name) {
+      this.htmlSelectElement.name = name;
+    }
+    this.renderSelectOptionsView();
   };
 
-  private renderSelectOptions = (): void => {
-    const { options } = this.props;
+  private renderSelectOptionsView = (): void => {
+    const { options, value } = this.props;
 
     const optionsHtmlElements = options.map((option) => {
       const element = document.createElement('option');
       element.innerHTML = option.title;
       element.value = option.value;
+      element.selected = option.value === value;
 
       return element;
     });
