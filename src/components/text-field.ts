@@ -26,6 +26,9 @@ class TextField {
     this.htmlElement = document.createElement('div');
     this.htmlLabelElement = document.createElement('label');
     this.htmlInputElement = document.createElement('input');
+
+    this.initialize();
+    this.renderView();
   }
 
   private initialize = (): void => {
@@ -43,4 +46,25 @@ class TextField {
       this.htmlInputElement,
     );
   };
+
+  private renderView = (): void => {
+    const { name, labelText, value } = this.props;
+
+    this.htmlLabelElement.innerHTML = labelText;
+    this.htmlInputElement.name = name;
+    if (value) {
+      this.htmlInputElement.value = value;
+    }
+  };
+
+  public updateProps = (newProps: Partial<TextFieldProps>): void => {
+    this.props = {
+      ...this.props,
+      ...newProps,
+    };
+
+    this.renderView();
+  };
 }
+
+export default TextField;
