@@ -29,13 +29,13 @@ class CarForm {
 
   private props: CarFormProps;
 
+  private fields: Fields;
+
   private htmlFormHeader: HTMLHeadingElement;
 
   private htmlFieldsContainer: HTMLDivElement;
 
   private htmlSubmitBtn: HTMLButtonElement;
-
-  private fields: Fields;
 
   public constructor(props: CarFormProps) {
     this.props = props;
@@ -65,6 +65,9 @@ class CarForm {
         labelText: 'Metai',
       }),
     };
+
+    this.initialize();
+    this.renderView();
   }
 
   private initialize = (): void => {
@@ -83,4 +86,60 @@ class CarForm {
       this.htmlSubmitBtn,
     );
   };
+
+  private handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+
+    const { onSubmit } = this.props;
+
+    const formData = new FormData(this.htmlElement);
+
+    const brand = formData.get('brand') as string | null;
+    const model = formData.get('model') as string | null;
+    const price = formData.get('price') as string | null;
+    const year = formData.get('year') as string | null;
+
+    if (!(brand && price && model && year)) {
+      alert('blogi formos duomenys');
+      return;
+    }
+
+    const formValues: Values = {
+      brand,
+      model,
+      price,
+      year,
+    };
+
+    onSubmit(formValues);
+  };
+
+  private renderView = (): void => {
+    const { title, values, submitBtnText } = this.props;
+
+    this.htmlFormHeader.innerHTML = title;
+
+    this.htmlSubmitBtn.innerHTML = submitBtnText;
+
+    const valuesKeyValueArr = Object.entries(values) as [keyof Values, string][];
+    valuesKeyValueArr.forEach(([fieldName, fieldValue]) => {
+      const field = this.fields[fieldName];
+      field.updateProps({
+        value: fieldValue,
+      });
+    });
+
+    this.htmlElement.addEventListener('submit', this.handleSubmit);
+  };
+
+  public updateProps = (newProps: Partial<CarFormProps>): void => {
+    this.props = {
+      ...this.props,
+      ...newProps,
+    };
+
+    this.renderView();
+  };
 }
+
+export default CarForm;
