@@ -92,6 +92,13 @@ class Table<Type extends RowData> {
       this.tbody,
     );
   };
+
+  public updateProps = (newProps: Partial<TableProps<Type>>): void => {
+    this.props = {
+      ...this.props,
+      ...newProps,
+    };
+  };
 }
 
 export default Table;
