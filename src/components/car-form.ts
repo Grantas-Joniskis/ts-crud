@@ -22,4 +22,13 @@ class CarForm {
   private htmlFieldsContainer: HTMLDivElement;
 
   private htmlSubmitBtn: HTMLButtonElement;
+
+  public constructor(props: CarFormProps) {
+    this.props = props;
+
+    this.htmlElement = document.createElement('form');
+    this.htmlFieldsContainer = document.createElement('div');
+    this.htmlFormHeader = document.createElement('h2');
+    this.htmlSubmitBtn = document.createElement('button');
+  }
 }
