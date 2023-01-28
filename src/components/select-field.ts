@@ -34,12 +34,13 @@ class SelectField {
     this.renderView();
   }
 
-  private initialize = (): void => {
+  private initialize = () => {
     const elementId = `select-${SelectField.instanceCounter}`;
 
     this.htmlLabelElement.setAttribute('for', elementId);
 
     this.htmlSelectElement.className = 'form-select';
+
     this.htmlSelectElement.id = elementId;
 
     this.htmlElement.className = 'form-group';
@@ -47,20 +48,6 @@ class SelectField {
       this.htmlLabelElement,
       this.htmlSelectElement,
     );
-  };
-
-  private renderView = (): void => {
-    const { labelText, onChange, name } = this.props;
-
-    this.htmlLabelElement.innerHTML = labelText;
-
-    if (onChange) {
-      this.htmlSelectElement.addEventListener('change', () => onChange(this.htmlSelectElement.value));
-    }
-    if (name) {
-      this.htmlSelectElement.name = name;
-    }
-    this.renderSelectOptionsView();
   };
 
   private renderSelectOptionsView = (): void => {
@@ -77,6 +64,29 @@ class SelectField {
 
     this.htmlSelectElement.innerHTML = '';
     this.htmlSelectElement.append(...optionsHtmlElements);
+  };
+
+  private renderView = (): void => {
+    const { labelText, onChange, name } = this.props;
+
+    this.htmlLabelElement.innerHTML = labelText;
+
+    if (onChange) {
+      this.htmlSelectElement.addEventListener('change', () => onChange(this.htmlSelectElement.value));
+    }
+    if (name) {
+      this.htmlSelectElement.name = name;
+    }
+    this.renderSelectOptionsView();
+  };
+
+  public updateProps = (newProps: Partial<SelectFieldProps>): void => {
+    this.props = {
+      ...this.props,
+      ...newProps,
+    };
+
+    this.renderView();
   };
 }
 
