@@ -33,7 +33,6 @@ class Table<Type extends RowData> {
     this.tbody = document.createElement('tbody');
 
     this.initialize();
-    this.renderView();
   }
 
   private checkColumnsCompatability = (): void => {
@@ -59,6 +58,8 @@ class Table<Type extends RowData> {
       this.thead,
       this.tbody,
     );
+
+    this.renderView();
   };
 
   private renderView = (): void => {
@@ -90,26 +91,25 @@ class Table<Type extends RowData> {
           tr.style.backgroundColor = '#fff2cf';
         }
 
-        const rowHtmlElement = document.createElement('tr');
-
         const cellsHtmlString = Object.keys(columns)
           .map((key) => `<td>${rowData[key]}</td>`)
           .join(' ');
 
-        rowHtmlElement.innerHTML = cellsHtmlString;
+        tr.innerHTML = cellsHtmlString;
 
-        this.addActionsCell(rowHtmlElement, rowData.id);
+        this.addActionsCell(tr, rowData.id);
 
-        return rowHtmlElement;
+        return tr;
       });
 
     this.tbody.append(...rowsHtmlElements);
   };
 
-  private addActionsCell = (rowHtmlElement: HTMLTableRowElement, id: string): void => {
+  private addActionsCell = (tr: HTMLTableRowElement, id: string) => {
     const { onDelete, onEdit, editedCarId } = this.props;
 
     const buttonCell = document.createElement('td');
+    buttonCell.className = 'd-flex justify-content-center gap-3';
 
     const isCancelButton = editedCarId === id;
     const editButton = document.createElement('button');
@@ -123,14 +123,14 @@ class Table<Type extends RowData> {
     deleteButton.type = 'button';
     deleteButton.innerHTML = 'Delete';
     deleteButton.className = 'btn btn-danger';
-    deleteButton.addEventListener('click', () => onDelete(id));
     deleteButton.style.width = '80px';
+    deleteButton.addEventListener('click', () => onDelete(id));
 
-    buttonCell.append(deleteButton);
-    rowHtmlElement.append(buttonCell);
+    buttonCell.append(editButton, deleteButton);
+    tr.append(buttonCell);
   };
 
-  public updateProps = (newProps: Partial<TableProps<Type>>): void => {
+  public updateProps = (newProps: Partial<TableProps<Type>>) => {
     this.props = {
       ...this.props,
       ...newProps,
