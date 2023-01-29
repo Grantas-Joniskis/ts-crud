@@ -27,6 +27,8 @@ class App {
     const foundElement = document.querySelector<HTMLElement>(selector);
     if (foundElement === null) throw new Error(`Nerastas elementas su selektoriumi '${selector}'`);
 
+    this.editedCarId = null;
+
     this.selectedBrandId = null;
 
     this.htmlElement = foundElement;
@@ -67,6 +69,7 @@ class App {
         price: '0',
         year: '2000',
       },
+      isEdited: Boolean(this.editedCarId),
       onSubmit: this.handleCreateCar,
     });
   }

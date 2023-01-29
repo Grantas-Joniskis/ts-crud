@@ -15,6 +15,7 @@ type CarFormProps = {
   title: string,
   submitBtnText: string,
   onSubmit: (values: Values) => void,
+  isEdited: boolean,
 };
 
 type Fields = {
